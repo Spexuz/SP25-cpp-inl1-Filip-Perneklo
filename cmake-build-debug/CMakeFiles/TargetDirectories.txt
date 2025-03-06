@@ -1,3 +1,3 @@
-C:/Users/Admin/CLionProjects/SchoolADVPROJ/cmake-build-debug/CMakeFiles/SchoolADVPROJ.dir
-C:/Users/Admin/CLionProjects/SchoolADVPROJ/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Admin/CLionProjects/SchoolADVPROJ/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/spexi/CLionProjects/SP25-cpp-inl1-Filip-Perneklo/cmake-build-debug/CMakeFiles/SchoolADVPROJ.dir
+C:/Users/spexi/CLionProjects/SP25-cpp-inl1-Filip-Perneklo/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/spexi/CLionProjects/SP25-cpp-inl1-Filip-Perneklo/cmake-build-debug/CMakeFiles/rebuild_cache.dir
