@@ -19,8 +19,8 @@ void Room::generateRoom() {
 //Getter Functions
 bool Room::containsEnemy() const { return hasEnemy; } //Checks and Returns if the Room contains an Enemy
 bool Room::containsItem() const { return hasItem; } //Checks and Returns if the Room Contains an Item
-shared_ptr<Room> Room::getLeftRoom() { return leftRoom; } //Checks and Returns the LeftRoom
-shared_ptr<Room> Room::getRightRoom() { return rightRoom; } //Checks and Returns the Right Room
+shared_ptr<Room> Room::getLeftRoom() const { return leftRoom; } //Checks and Returns the LeftRoom
+shared_ptr<Room> Room::getRightRoom() const { return rightRoom; } //Checks and Returns the Right Room
 
 //Function for Linking the Rooms Together
 void Room::setLeftRoom(shared_ptr<Room> room) { leftRoom = room; }
