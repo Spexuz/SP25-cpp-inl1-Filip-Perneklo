@@ -8,6 +8,7 @@ using namespace std;
 int main() {
 
     Game game;  // Create the Game Object
+    game.selectDifficulty();
     game.run(); // Start the Game Loop
 
     Character hero("Hero", 100, 20);

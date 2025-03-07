@@ -16,11 +16,13 @@ private:
     shared_ptr<Room> startingRoom; // Pointer to Define First Room
     shared_ptr<Room> currentRoom; // Pointer to the Player's Current Location
     Player player; // Player Object
+    int difficultyMultiplier; // Scaling Enemy Generation Values based on Difficulty
 
 public:
     Game(); // Constructor
     ~Game(); // Destructor
 
+    void selectDifficulty();
     void run(); // Running the Game Loop
     void initializeGame(); // Starts the Game and Generates all Rooms
     void generateRooms(int numRooms); // Generates Procedural Rooms

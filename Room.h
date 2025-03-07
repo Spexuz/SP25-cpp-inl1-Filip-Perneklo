@@ -10,15 +10,18 @@ using namespace std;
 
 class Room {
 private:
+    int roomID;   //RoomID for Debugging
+    bool hasItem;
     shared_ptr<Enemy> enemy;  // Pointer to an enemy in the room
     shared_ptr<Item> item;    // Pointer to an item in the room
-    int roomID;               // Room ID for debugging
+    int difficultyMultiplier;
     shared_ptr<Room> leftRoom;  // Pointer to the left room (if any)
     shared_ptr<Room> rightRoom; // Pointer to the right room (if any)
 
+
 public:
     // Constructor: Initializes a room with an ID
-    Room(int id);
+    Room(int id, int difficultyMultiplier);
 
     // Generates the room's contents (enemy and item) randomly
     void generateRoom();
@@ -29,7 +32,7 @@ public:
     void removeEnemy();
 
     // Item handling
-    bool hasItem() const;
+    bool hasItemFunc() const;
     shared_ptr<Item> getItem();
     void removeItem();
 

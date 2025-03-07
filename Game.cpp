@@ -9,12 +9,12 @@
 using namespace std;
 
 // Constructor for initializing the game
-Game::Game() {
+Game::Game() : difficultyMultiplier(1) { // Default difficulty: Medium
     isRunning = true; // Game Starts and Sets Run State to True
     srand(time(0)); // Seeding the Random Generation through Machine Local Time
 
     // Creating the Starting Room and Generating Room Layout
-    shared_ptr<Room> firstRoom = make_shared<Room>(1); // Assigns the First Room the ID of 1
+    shared_ptr<Room> firstRoom = make_shared<Room>(1, difficultyMultiplier); // Assigns the First Room the ID of 1
     firstRoom->generateRoom(); // Generates the Layout
     rooms.push_back(firstRoom); // Pushes the Room to the First Spot of the Vector
 
@@ -23,7 +23,7 @@ Game::Game() {
     // Generating the Rest of the Map (19 Rooms)
     shared_ptr<Room> previousRoom = firstRoom; // Simple for Loop for Room Generation until 20 is hit
     for (int i = 2; i <= 20; i++) {
-        shared_ptr<Room> newRoom = make_shared<Room>(i);
+        shared_ptr<Room> newRoom = make_shared<Room>(i, difficultyMultiplier);
         newRoom->generateRoom(); // Runs each Generated room through the Function for assigning Items/Monsters
         rooms.push_back(newRoom); // Assigning Rooms to the Vector
 
@@ -37,6 +37,33 @@ Game::Game() {
         previousRoom = newRoom; // Moves Forward in the Room Generation Chain
     }
 }
+
+void Game::selectDifficulty() {
+    cout << "Select Difficulty (type 1, 2 or 3):\n";
+    cout << "1. Easy\n2. Medium\n3. Hard\n";
+    int choice;
+    cin >> choice;
+
+    switch(choice) {
+        case 1:
+            difficultyMultiplier = 1; // Easy
+        cout << "Easy Difficulty Selected.\n";
+        break;
+        case 2:
+            difficultyMultiplier = 2; // Medium
+        cout << "Medium Difficulty Selected.\n";
+        break;
+        case 3:
+            difficultyMultiplier = 3; // Hard
+        cout << "Hard Difficulty Selected.\n";
+        break;
+        default:
+            difficultyMultiplier = 2; // Default to Medium
+        cout << "Invalid choice, Medium Difficulty Selected by default.\n";
+        break;
+    }
+}
+
 
 // Main Game Loop
 void Game::run() {
@@ -95,7 +122,7 @@ void Game::run() {
 
 // Function to allow players to pick up items
 void Game::pickUpItem() {
-    if (currentRoom->hasItem()) {
+    if (currentRoom->hasItemFunc()) {
         shared_ptr<Item> item = currentRoom->getItem();
         cout << "You picked up: " << item->getName() << "!" << endl;
         player.addItem(item->getName()); // assuming player has addItem() defined
