@@ -17,6 +17,7 @@ void Room::generateRoom() {
     // Assign an enemy if the condition is met
     if (enemyChance == 0) {
         enemy = make_shared<Enemy>("Skeleton", 20, 5);
+        //cout << "[DEBUG] Enemy Spawned in Room " << roomID << endl; (Debug for Checking Which Rooms Spawned Enemies)
     } else {
         enemy = nullptr;
     }

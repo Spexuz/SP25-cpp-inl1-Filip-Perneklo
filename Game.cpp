@@ -106,6 +106,46 @@ void Game::pickUpItem() {
     }
 }
 
+void Game::combat(std::shared_ptr<Enemy> enemy) {
+    cout << enemy->getName() << " is Present in the Dungeon!\n";
+
+    while (player.isAlive() && enemy->isAlive()) {
+        cout << "Choose Action: ATTACK or RUN\n> ";
+        string action;
+        cin >> action;
+
+        // Convert input to uppercase
+        for (char &c : action) {
+            c = toupper(c);
+        }
+
+        if (action == "ATTACK") {
+            player.attack(*enemy);
+
+            // Check if enemy is defeated before it attacks
+            if (!enemy->isAlive()) {
+                cout << "You defeated " << enemy->getName() << "!\n";
+                currentRoom->removeEnemy();
+                return;
+            }
+
+            // Enemy's turn
+            enemy->attack(player);
+            if (!player.isAlive()) {
+                cout << "You have been defeated!\n";
+                isRunning = false;
+                return;
+            }
+
+        } else if (action == "RUN") {
+            cout << "You got away safely!\n";
+            return;
+        } else {
+            cout << "Invalid Input. Choose ATTACK or RUN.\n";
+        }
+    }
+}
+
 // Memory Cleanup
 Game::~Game() {
     rooms.clear();

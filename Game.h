@@ -28,7 +28,7 @@ public:
     void moveToRoom(char direction); // Moves the Player Based on Choice (Left or Right)
     void displayIntro() const; // Runs Game Introduction
     void combat(shared_ptr<Enemy> enemy); // Declare combat system
-    void pickupItem();
+    void pickUpItem();
 };
 
 #endif // GAME_H
