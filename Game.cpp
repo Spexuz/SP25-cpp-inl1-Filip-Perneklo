@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Room.h"
+#include "Item.h"
 #include <iostream>
 #include <memory>
 #include <cstdlib>
@@ -40,7 +41,7 @@ Game::Game() {
 // Main Game Loop
 void Game::run() {
     cout << "Welcome to the Darkest Dungeon\n";
-    cout << "Enter 'LEFT' or 'RIGHT' to Move, use 'QUIT' to Exit the Game\n";
+    cout << "Enter 'LEFT' or 'RIGHT' to Move, use 'PICKUP' to pick up items, use 'QUIT' to Exit the Game\n";
 
     while (isRunning) {
         currentRoom->displayRoomInfo(); // Shows Room Information
@@ -83,57 +84,25 @@ void Game::run() {
             } else {
                 cout << "Hmm.. There does not seem to be a Door Here\n";
             }
+        } else if (choice == "PICKUP") {
+            pickUpItem();
         } else {
-            cout << "Please Use: 'LEFT', 'RIGHT', or 'QUIT'.\n";
+            cout << "Please Use: 'LEFT', 'RIGHT', 'PICKUP', or 'QUIT'.\n";
             currentRoom->displayRoomInfo(); // Redisplay room info after invalid input
         }
     }
 }
 
-// Combat Loop
-void Game::combat(shared_ptr<Enemy> enemy) {
-    cout << enemy->getName() << " is Present in the Dungeon!\n";
-
-    while (player.isAlive() && enemy->isAlive()) {
-        cout << "Choose Action: ATTACK or RUN\n> ";
-        string action;
-        cin >> action;
-
-        // Convert input to uppercase
-        for (char &c : action) {
-            c = toupper(c);
-        }
-
-        if (action == "ATTACK") {
-            player.attack(*enemy);
-        } else if (action == "RUN") {
-            cout << "You got away safely!\n";
-            return; // Exit combat
-        } else {
-            cout << "Invalid Input. Choose ATTACK or RUN.\n";
-            continue;
-        }
-
-        // Check if enemy is defeated **before enemy's turn**
-        if (!enemy->isAlive()) {
-            cout << "You defeated " << enemy->getName() << "!\n";
-            currentRoom->removeEnemy();
-            return;
-        }
-
-        // Enemy attacks only if still alive
-        if (enemy->isAlive()) {
-            //cout << "[DEBUG] Enemy turn starting\n"; (Turns out we were fucking calling the function here and in Enemy.cpp
-            enemy->attack(player);
-            //cout << "[DEBUG] Enemy turn finished\n";
-        }
-
-        // Check if player is defeated
-        if (!player.isAlive()) {
-            cout << "You have been defeated!\n";
-            isRunning = false;
-            return;
-        }
+// Function to allow players to pick up items
+void Game::pickUpItem() {
+    if (currentRoom->hasItem()) {
+        shared_ptr<Item> item = currentRoom->getItem();
+        cout << "You picked up: " << item->getName() << "!" << endl;
+        player.addItem(item->getName()); // assuming player has addItem() defined
+        cout << "Item added to inventory!" << endl;
+        currentRoom->removeItem();
+    } else {
+        cout << "There is nothing to pick up here." << endl;
     }
 }
 

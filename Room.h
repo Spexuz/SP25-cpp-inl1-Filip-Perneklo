@@ -2,45 +2,44 @@
 #define ROOM_H
 
 #include <iostream>
-#include <memory>  // For smart pointers
-#include <cstdlib> // For random number generation
-#include <ctime>   // To seed randomness
-
-#include "Enemy.h"  // Ensure Enemy class is included
+#include <memory>
+#include "Enemy.h"
+#include "Item.h"
 
 using namespace std;
 
-// Room Class for Procedural Generation
 class Room {
 private:
-    bool hasItem;  // Determines if the room contains an item
-    shared_ptr<Room> leftRoom;  // Pointer to Left Room
-    shared_ptr<Room> rightRoom; // Pointer to Right Room
-    shared_ptr<Enemy> enemy;    // Pointer to Enemy Object
-    int roomID; // Room ID for debugging
+    shared_ptr<Enemy> enemy;  // Pointer to an enemy in the room
+    shared_ptr<Item> item;    // Pointer to an item in the room
+    int roomID;               // Room ID for debugging
+    shared_ptr<Room> leftRoom;  // Pointer to the left room (if any)
+    shared_ptr<Room> rightRoom; // Pointer to the right room (if any)
 
 public:
-    // Constructor
+    // Constructor: Initializes a room with an ID
     Room(int id);
 
-    // Room Content Generation
+    // Generates the room's contents (enemy and item) randomly
     void generateRoom();
 
-    // Enemy Handling
-    bool hasEnemy() const;            // Checks if there is an enemy
-    shared_ptr<Enemy> getEnemy();      // Returns enemy in the room
-    void removeEnemy();                // Removes the enemy after defeat
+    // Enemy handling
+    bool hasEnemy() const;
+    shared_ptr<Enemy> getEnemy();
+    void removeEnemy();
 
-    // Item Handling
-    bool containsItem() const;         // Checks if the room has an item
+    // Item handling
+    bool hasItem() const;
+    shared_ptr<Item> getItem();
+    void removeItem();
 
-    // Room Navigation
+    // Room linking functions
     shared_ptr<Room> getLeftRoom() const;
     shared_ptr<Room> getRightRoom() const;
     void setLeftRoom(shared_ptr<Room> room);
     void setRightRoom(shared_ptr<Room> room);
 
-    // Display Information
+    // Displays room information (for debugging)
     void displayRoomInfo() const;
 };
 

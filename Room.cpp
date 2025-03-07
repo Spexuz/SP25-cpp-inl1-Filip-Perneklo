@@ -1,14 +1,18 @@
 #include "Room.h"
+#include "Item.h"
+#include <cstdlib>
+#include <ctime>
 
-// Constructor: Initializes Rooms with an ID and Random Contents
-Room::Room(int id) : roomID(id), hasItem(false) {
+// Constructor: Initializes the room
+Room::Room(int id) : roomID(id) {
+    // Do not call generateRoom() here; Gave me a huge fucking headache
+    // We call it explicitly in Game.cpp after creating the room.
 }
 
-// Function for Randomly Determining Room Contents
+// Generates room contents (enemy and item) randomly
 void Room::generateRoom() {
-    // Ensure randomness works correctly (srand is now ONLY in Game.cpp)
-    int enemyChance = rand() % 2; // 50% chance to have an enemy
-    int itemChance = rand() % 5;  // 20% chance to have an item
+    int enemyChance = rand() % 2; // 50% chance to spawn an enemy
+    int itemChance = rand() % 5;  // 20% chance to spawn an item
 
     // Assign an enemy if the condition is met
     if (enemyChance == 0) {
@@ -17,11 +21,15 @@ void Room::generateRoom() {
         enemy = nullptr;
     }
 
-    // Assign item if condition is met
-    hasItem = (itemChance == 0);
+    // Assign an item if the condition is met
+    if (itemChance == 0) {
+        item = make_shared<Item>("Health Potion", 10); // Example: restores 10 HP
+    } else {
+        item = nullptr;
+    }
 }
 
-// Enemy Handling
+// Enemy handling
 bool Room::hasEnemy() const {
     return enemy != nullptr;
 }
@@ -34,18 +42,39 @@ void Room::removeEnemy() {
     enemy = nullptr;
 }
 
-// Getter Functions
-bool Room::containsItem() const { return hasItem; } // Checks if the Room Contains an Item
-shared_ptr<Room> Room::getLeftRoom() const { return leftRoom; } // Returns the Left Room
-shared_ptr<Room> Room::getRightRoom() const { return rightRoom; } // Returns the Right Room
+// Item handling
+bool Room::hasItem() const {
+    return item != nullptr;
+}
 
-// Function for Linking the Rooms Together
-void Room::setLeftRoom(shared_ptr<Room> room) { leftRoom = room; }
-void Room::setRightRoom(shared_ptr<Room> room) { rightRoom = room; }
+shared_ptr<Item> Room::getItem() {
+    return item;
+}
 
-// Room Information for Debugging and Testing
+void Room::removeItem() {
+    item = nullptr;
+}
+
+// Room linking functions
+shared_ptr<Room> Room::getLeftRoom() const {
+    return leftRoom;
+}
+
+shared_ptr<Room> Room::getRightRoom() const {
+    return rightRoom;
+}
+
+void Room::setLeftRoom(shared_ptr<Room> room) {
+    leftRoom = room;
+}
+
+void Room::setRightRoom(shared_ptr<Room> room) {
+    rightRoom = room;
+}
+
+// Displays room information (for debugging/testing)
 void Room::displayRoomInfo() const {
-    cout << "Room ID: " << roomID << "\n"; // Verify Room Number
-    cout << "Enemy: " << (hasEnemy() ? "TRUE" : "FALSE") << "\n"; // Enemy Checker
-    cout << "Item: " << (hasItem ? "TRUE" : "FALSE") << "\n"; // Item Checker
+    cout << "Room ID: " << roomID << "\n";
+    cout << "Enemy: " << (hasEnemy() ? "TRUE" : "FALSE") << "\n";
+    cout << "Item: " << (hasItem() ? "TRUE" : "FALSE") << "\n";
 }
