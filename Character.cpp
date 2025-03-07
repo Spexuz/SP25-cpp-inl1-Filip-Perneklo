@@ -23,6 +23,10 @@ int Character::getHealth() const {
     return health; // Gets the Current Health of the Target
 }
 
+bool Character::isAlive() const { //Checking is PC/NPC is Still ALive
+    return health > 0; //Returns True if HP is above 0
+}
+
 int Character::getStrength() const {
     return strength; // Gets the Current Strength of the Target
 }
@@ -33,6 +37,19 @@ void Character::takeDamage(int damage) {
         health = 0; // Prevents the Target from going into Negative HP Numbers
     }               // And sets the taget hp to 0 if they were to do it somehow
 }
+
+//Attacking another Character
+void Character::attack(Character &target) {
+    //cout << "[DEBUG] " << name << " is attacking " << target.getName() << "\n"; // Debug before attack
+    cout << name << " attacks " << target.getName() << " for " << strength << " damage\n";
+
+    target.takeDamage(strength);
+
+    //cout << "[DEBUG] Attack finished\n"; // Debug after attack
+}
+
+
+
 
 // Getter for Displaying Character Stats
 void Character::displayStats() const {

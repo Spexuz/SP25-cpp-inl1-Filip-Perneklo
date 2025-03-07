@@ -11,4 +11,6 @@ add_executable(SchoolADVPROJ main.cpp
         Player.cpp
         Player.h
         Room.cpp
-        Room.h)
+        Room.h
+        Enemy.cpp
+        Enemy.h)

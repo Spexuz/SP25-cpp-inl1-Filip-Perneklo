@@ -10,6 +10,9 @@
 Player::Player(string name, int hp, int strength)
     : Character(name, hp, strength) {}
 
+// Default Constructor: Sets a placeholder player
+Player::Player() : Character("The Highwayman", 100, 10) {}
+
 //Adds an Item to Player Inventory
 void Player::addItem(string item) {
     Inventory.push_back(item); //Adding item to Inventory through a Vecotr

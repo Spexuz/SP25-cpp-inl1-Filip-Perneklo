@@ -27,6 +27,8 @@ public:
     // Methods
     virtual void takeDamage(int damage); // Reduces HP based on Damage
     virtual void displayStats() const;
+    bool isAlive() const;
+    virtual void attack(Character& target);
 };
 
 

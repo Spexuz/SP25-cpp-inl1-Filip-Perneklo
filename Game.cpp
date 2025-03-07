@@ -7,50 +7,68 @@
 
 using namespace std;
 
-//Constructor for initializing the game
+// Constructor for initializing the game
 Game::Game() {
-    isRunning = true; //Game Starts and Sets Run State to True
-    srand(time(0)); //Seeding the Random Generation through MLT (Machine Local Time)
+    isRunning = true; // Game Starts and Sets Run State to True
+    srand(time(0)); // Seeding the Random Generation through Machine Local Time
 
-    //Creating the Starting Room and Generating Room Layout
-    shared_ptr<Room> firstRoom = make_shared<Room>(1); //Assigns the First Room the ID of 1
-    firstRoom->generateRoom(); //Generates the Layout
-    rooms.push_back(firstRoom); //Pushes the Room to the First Spot of the Vector
+    // Creating the Starting Room and Generating Room Layout
+    shared_ptr<Room> firstRoom = make_shared<Room>(1); // Assigns the First Room the ID of 1
+    firstRoom->generateRoom(); // Generates the Layout
+    rooms.push_back(firstRoom); // Pushes the Room to the First Spot of the Vector
 
     currentRoom = firstRoom;
 
-    //Generating the Rest of the Map (19 Rooms)
-    shared_ptr<Room> previousRoom = firstRoom; //Simple for Loop for Room Generation until 20 is hit
+    // Generating the Rest of the Map (19 Rooms)
+    shared_ptr<Room> previousRoom = firstRoom; // Simple for Loop for Room Generation until 20 is hit
     for (int i = 2; i <= 20; i++) {
         shared_ptr<Room> newRoom = make_shared<Room>(i);
-        newRoom->generateRoom(); //Runs each Generated room through the Function for assigning Items/Monsters
-        rooms.push_back(newRoom); //Assigning Rooms to the Vector
+        newRoom->generateRoom(); // Runs each Generated room through the Function for assigning Items/Monsters
+        rooms.push_back(newRoom); // Assigning Rooms to the Vector
 
-        //Assigns Room thier respective direction, aka Left or Right
+        // Assigns Room their respective direction, aka Left or Right
         if (rand() % 2 == 0) {
             previousRoom->setLeftRoom(newRoom);
         } else {
             previousRoom->setRightRoom(newRoom);
         }
 
-        previousRoom = newRoom; // Moves Forward in the Room Gen Chain
+        previousRoom = newRoom; // Moves Forward in the Room Generation Chain
     }
 }
 
-//Main Game Loop
+// Main Game Loop
 void Game::run() {
     cout << "Welcome to the Darkest Dungeon\n";
     cout << "Enter 'LEFT' or 'RIGHT' to Move, use 'QUIT' to Exit the Game\n";
 
     while (isRunning) {
-        currentRoom->displayRoomInfo(); //Shows Room Information
+        currentRoom->displayRoomInfo(); // Shows Room Information
 
-        //Player input
+        // Checks the Room for Enemies and Triggers Combat when Present
+        if (currentRoom->hasEnemy()) {
+            cout << "An enemy appears!\n";
+            combat(currentRoom->getEnemy());
+
+            // If the player dies, stop the game
+            if (!player.isAlive()) {
+                cout << "You Died. Game over.\n";
+                isRunning = false;
+                return;
+            }
+        }
+
+        // Player Movement and Input
         string choice;
         cout << "> ";
         cin >> choice;
 
-        if (choice == "QUIT") { //Huge If Statement to Handle Player Input and Handling Invalid Inputs.
+        // Convert input to uppercase for consistency
+        for (char &c : choice) {
+            c = toupper(c);
+        }
+
+        if (choice == "QUIT") {
             isRunning = false;
             cout << "Exiting game..." << endl;
         } else if (choice == "LEFT") {
@@ -67,11 +85,59 @@ void Game::run() {
             }
         } else {
             cout << "Please Use: 'LEFT', 'RIGHT', or 'QUIT'.\n";
+            currentRoom->displayRoomInfo(); // Redisplay room info after invalid input
         }
     }
 }
 
-//Memory Cleanup
+// Combat Loop
+void Game::combat(shared_ptr<Enemy> enemy) {
+    cout << enemy->getName() << " is Present in the Dungeon!\n";
+
+    while (player.isAlive() && enemy->isAlive()) {
+        cout << "Choose Action: ATTACK or RUN\n> ";
+        string action;
+        cin >> action;
+
+        // Convert input to uppercase
+        for (char &c : action) {
+            c = toupper(c);
+        }
+
+        if (action == "ATTACK") {
+            player.attack(*enemy);
+        } else if (action == "RUN") {
+            cout << "You got away safely!\n";
+            return; // Exit combat
+        } else {
+            cout << "Invalid Input. Choose ATTACK or RUN.\n";
+            continue;
+        }
+
+        // Check if enemy is defeated **before enemy's turn**
+        if (!enemy->isAlive()) {
+            cout << "You defeated " << enemy->getName() << "!\n";
+            currentRoom->removeEnemy();
+            return;
+        }
+
+        // Enemy attacks only if still alive
+        if (enemy->isAlive()) {
+            //cout << "[DEBUG] Enemy turn starting\n"; (Turns out we were fucking calling the function here and in Enemy.cpp
+            enemy->attack(player);
+            //cout << "[DEBUG] Enemy turn finished\n";
+        }
+
+        // Check if player is defeated
+        if (!player.isAlive()) {
+            cout << "You have been defeated!\n";
+            isRunning = false;
+            return;
+        }
+    }
+}
+
+// Memory Cleanup
 Game::~Game() {
     rooms.clear();
 }

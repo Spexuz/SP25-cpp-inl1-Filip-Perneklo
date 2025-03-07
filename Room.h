@@ -1,46 +1,47 @@
-//
-// Created by Admin on 2025-03-06.
-//
-
 #ifndef ROOM_H
 #define ROOM_H
 
 #include <iostream>
-#include <memory> //För Pointers och Smart Pointers
-#include <cstdlib> // För RNG
-#include <ctime> //För Random Seed
+#include <memory>  // For smart pointers
+#include <cstdlib> // For random number generation
+#include <ctime>   // To seed randomness
+
+#include "Enemy.h"  // Ensure Enemy class is included
 
 using namespace std;
-//Room Class for Procedurally Generation Rooms
+
+// Room Class for Procedural Generation
 class Room {
 private:
-    bool hasEnemy; //Determines if Room Contains a Monster
-    bool hasItem; //Determines if Room Contains a Item
-    shared_ptr<Room> leftRoom; //Pointer to Left Room Connection
-    shared_ptr<Room> rightRoom; //Pointer to Right ROom Connection
-    int roomID; //RoomID for later Debugging
+    bool hasItem;  // Determines if the room contains an item
+    shared_ptr<Room> leftRoom;  // Pointer to Left Room
+    shared_ptr<Room> rightRoom; // Pointer to Right Room
+    shared_ptr<Enemy> enemy;    // Pointer to Enemy Object
+    int roomID; // Room ID for debugging
 
 public:
-    //Constructor
+    // Constructor
     Room(int id);
 
-    //Randomly Assigning Rooms Items or Monsters
+    // Room Content Generation
     void generateRoom();
 
-    //Getters
-    bool containsEnemy() const;
-    bool containsItem() const;
+    // Enemy Handling
+    bool hasEnemy() const;            // Checks if there is an enemy
+    shared_ptr<Enemy> getEnemy();      // Returns enemy in the room
+    void removeEnemy();                // Removes the enemy after defeat
+
+    // Item Handling
+    bool containsItem() const;         // Checks if the room has an item
+
+    // Room Navigation
     shared_ptr<Room> getLeftRoom() const;
     shared_ptr<Room> getRightRoom() const;
-
-    //Setters
     void setLeftRoom(shared_ptr<Room> room);
     void setRightRoom(shared_ptr<Room> room);
 
-    //Displaying Room Information
+    // Display Information
     void displayRoomInfo() const;
 };
 
-
-
-#endif //ROOM_H
+#endif // ROOM_H

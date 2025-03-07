@@ -17,7 +17,7 @@ class Player : public Character {
         vector<string> Inventory; // Player Inventory Vector
     public:
         Player(string name, int hp, int strength); //Constructor
-
+        Player();
         void addItem(string item); // Function for Adding Items
         void useItem(int index); //Function for Using Items
 
